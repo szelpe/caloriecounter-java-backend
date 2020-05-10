@@ -4,6 +4,7 @@ import com.greenfoxacademy.caloriecounter.models.Food;
 import com.greenfoxacademy.caloriecounter.models.User;
 import com.greenfoxacademy.caloriecounter.repositories.FoodRepository;
 import com.greenfoxacademy.caloriecounter.services.FoodServiceImpl;
+import com.greenfoxacademy.caloriecounter.services.FoodStatisticsService;
 import com.greenfoxacademy.caloriecounter.services.UserService;
 import com.greenfoxacademy.caloriecounter.services.UserServiceImpl;
 import org.junit.Test;
@@ -29,11 +30,9 @@ public class FoodServiceTests {
     // Arrange
     UserService userService = new MockUserService();
     FoodRepository foodRepository = Mockito.mock(FoodRepository.class);
+    var foodStatisticsService = Mockito.mock(FoodStatisticsService.class);
 
-    Instant instant = Instant.parse("2018-08-19T16:02:42.00Z");
-    ZoneId zoneId = ZoneId.of("Asia/Calcutta");
-    Clock fakeClock = Clock.fixed(instant, zoneId);
-    FoodServiceImpl foodService = new FoodServiceImpl(userService, foodRepository, fakeClock);
+    FoodServiceImpl foodService = new FoodServiceImpl(userService, foodRepository, foodStatisticsService);
     List<Food> fakeFoods = Arrays.asList(
             new Food("Test food", 1, LocalDateTime.now()),
             new Food("Test food 2", 2, LocalDateTime.now())

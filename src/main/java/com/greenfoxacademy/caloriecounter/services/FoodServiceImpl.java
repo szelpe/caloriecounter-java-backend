@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 public class FoodServiceImpl implements FoodService {
   private UserService userService;
   private FoodRepository foodRepository;
-  private final Clock clock;
+  private final FoodStatisticsService foodStatisticsService;
 
-  public FoodServiceImpl(UserService userService, FoodRepository foodRepository, Clock clock) {
+  public FoodServiceImpl(UserService userService, FoodRepository foodRepository, FoodStatisticsService foodStatisticsService) {
     this.userService = userService;
     this.foodRepository = foodRepository;
-    this.clock = clock;
+    this.foodStatisticsService = foodStatisticsService;
   }
 
   @Override
@@ -54,7 +54,7 @@ public class FoodServiceImpl implements FoodService {
       throw new IllegalStateException("User is not logged in");
     }
 
-    food.setAddedAt(LocalDateTime.now(this.clock));
+    food.setAddedAt(LocalDateTime.now(Clock.systemUTC()));
     food.setUser(optionalUser.get());
 
     return foodRepository.save(food);
@@ -69,19 +69,6 @@ public class FoodServiceImpl implements FoodService {
   public List<WeeklyStatistic> getStatistics(LocalDateTime from, LocalDateTime to) {
     Collection<Food> foods = foodRepository.findAllByAddedAtAfterAndAddedAtBefore(from, to);
 
-    return foods.stream()
-            .collect(Collectors.groupingBy(f -> getWeekStart(f.getAddedAt())))
-            .entrySet()
-            .stream()
-            .map(e -> new WeeklyStatistic(e.getKey(), getSum(e)))
-            .collect(Collectors.toList());
-  }
-
-  private int getSum(Map.Entry<LocalDateTime, List<Food>> e) {
-    return e.getValue().stream().mapToInt(Food::getAmount).sum();
-  }
-
-  private LocalDateTime getWeekStart(LocalDateTime dateTime) {
-    return dateTime.with(DayOfWeek.MONDAY).with(LocalTime.MIDNIGHT);
+    return foodStatisticsService.calculateWeekly(new ArrayList<>(foods));
   }
 }
