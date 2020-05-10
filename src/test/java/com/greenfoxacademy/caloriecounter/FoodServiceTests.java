@@ -6,7 +6,6 @@ import com.greenfoxacademy.caloriecounter.repositories.FoodRepository;
 import com.greenfoxacademy.caloriecounter.services.FoodServiceImpl;
 import com.greenfoxacademy.caloriecounter.services.UserService;
 import com.greenfoxacademy.caloriecounter.services.UserServiceImpl;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -18,6 +17,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class FoodServiceTests {
   @Test
@@ -42,7 +45,8 @@ public class FoodServiceTests {
     Collection<Food> foods = foodService.findAll();
 
     // Assert
-    Assert.assertEquals(2, foods.size());
+    // assertEquals(2, foods.size());
+    assertThat(foods, hasSize(2));
   }
 }
 

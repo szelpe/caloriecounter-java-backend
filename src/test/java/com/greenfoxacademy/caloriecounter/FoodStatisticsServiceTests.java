@@ -3,12 +3,13 @@ package com.greenfoxacademy.caloriecounter;
 import com.greenfoxacademy.caloriecounter.models.Food;
 import com.greenfoxacademy.caloriecounter.services.FoodStatistics;
 import com.greenfoxacademy.caloriecounter.services.FoodStatisticsServiceImpl;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class FoodStatisticsServiceTests {
 
@@ -27,6 +28,6 @@ public class FoodStatisticsServiceTests {
     FoodStatistics stats = foodStatisticsService.calculate(foods);
 
     // Assert
-    Assert.assertEquals(2, stats.getNumberOfFoods());
+    assertEquals(2, stats.getNumberOfFoods());
   }
 }
